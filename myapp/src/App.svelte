@@ -14,7 +14,10 @@
 <!-- <Counter {...props} /> -->
 
 <!-- <Button title="Your Button"/> -->
-<Button>
+<Button size="small" 
+        shadow={true} 
+        bgColor="red" 
+        textColor="white">
   Button Text
 </Button>
 
