@@ -45,3 +45,14 @@ If you have state that's important to retain within a component, consider creati
 import { writable } from 'svelte/store'
 export default writable(0)
 ```
+
+
+Install dependencies:
+
+npm install
+npm install -D vite
+
+
+Use the correct version of node. Change it using nvm:
+
+nvm use v20.11.0
