@@ -34,7 +34,7 @@
     },
   ];
 
-  // $: console.log(todos);
+  $: console.log(todos);  // Reactive variables
 
   function handleAddTodo(event) {
     event.preventDefault();

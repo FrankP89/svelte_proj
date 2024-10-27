@@ -72,6 +72,7 @@
 <div class="todo-list-wrapper">
     <ui>
         {#each todos as { id, title, completed}, index (id)}
+            {@debug id, title}
             {@const number = index + 1}
             <li>
                 <label >
