@@ -15,6 +15,7 @@
   import { v4 as uuid } from "uuid";
 
   let todoList = [];
+  let showList = true;
 
   let todos = [
     {
@@ -34,7 +35,7 @@
     },
   ];
 
-  $: console.log(todos);  // Reactive variables
+  // $: console.log(todos);  // Reactive variables
 
   function handleAddTodo(event) {
     event.preventDefault();
@@ -101,6 +102,12 @@
 
 <h2>{todos.length} TO DOs</h2>
 
+<label>
+  <input type="checkbox" bind:checked={showList} />
+  Show List
+</label>
+{#if showList}
+
 <TodoList
   {todos}
   bind:this={todoList}
@@ -109,7 +116,10 @@
   on:toggletodo={handleToggleTodo}
 />
 
-<button on:click={() => todoList.focusInput()}> Focus </button>
+{/if}
+
+
+<!-- <button on:click={() => todoList.focusInput()}> Focus </button> -->
 
 <style>
 </style>
