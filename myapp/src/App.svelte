@@ -43,6 +43,10 @@
     }];
   }
 
+  function handleRemoveTodo(event) {
+    todos = todos.filter(t => t.id !== event.detail.id);
+  }
+
   const maxCount = 6;
   const props = { initialCount: 3, maxCount };
 </script>
@@ -73,7 +77,10 @@
 
 <h2>{todos.length} TO DOs</h2>
 
-<TodoList {todos} on:addtodo={handleAddTodo} />
+<TodoList 
+  {todos} 
+  on:removetodo={handleRemoveTodo} 
+  on:addtodo={handleAddTodo} />
 
 <style>
 </style>

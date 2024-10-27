@@ -41,13 +41,35 @@
             inputText = '';
         }
     }
+
+        function handleRemoveTodo(id) {
+            
+            dispatch('removetodo', {
+                id
+            });
+        }
+
+
+
+
 </script>
 
 <div class="todo-list-wrapper">
     <ui>
-        {#each todos as { id, title }, index (id)}
+        {#each todos as { id, title, completed}, index (id)}
             {@const number = index + 1}
-            <li>{number} - {title}</li>
+            <li>
+                <label>
+                    <input type="checkbox" checked={completed}/>
+                    
+                    {title}
+                </label>
+                <button on:click={() =>                     
+                    handleRemoveTodo(id)
+                    }>
+                    Remove
+                </button>
+            </li>
         {/each}
     </ui>
     <form class="add-todo-form" on:submit|preventDefault={handleAddTodo}>
