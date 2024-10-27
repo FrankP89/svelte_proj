@@ -18,34 +18,26 @@
   let todoList = [];
   let showList = true;
 
-  let todos = [
-    {
-      id: uuid(),
-      title: "Todo 1",
-      completed: true,
-    },
-    {
-      id: uuid(),
-      title: "Todo 2",
-      completed: false,
-    },
-    {
-      id: uuid(),
-      title: "Todo 3",
-      completed: true,
-    },
-    {
-      id: uuid(),
-      title: "Todo 4 with a long long long long long text",
-      completed: false,
-    },
-  ];
+  let todos = null;
+  let promise = loadTodos();
   // $: console.log(todos);  // Reactive variables
+
+  function loadTodos() {
+    return fetch("https://jsonplaceholder.typicode.com/todos?_limit=10").then(
+      (response) => {
+        if (response.ok) {
+          return response.json();
+        } else {
+          throw new Error("Unable to fetch data from the server");
+        }
+      },
+    );
+  }
 
   async function handleAddTodo(event) {
     event.preventDefault();
 
-    setTimeout(async() => {
+    setTimeout(async () => {
       // Gives some time for the form to be submitted
       // This approach creates new arrays
       todos = [
@@ -80,7 +72,6 @@
 
   const maxCount = 6;
   const props = { initialCount: 3, maxCount };
-
 </script>
 
 <!-- <Counter {...props} /> -->
@@ -106,24 +97,33 @@
   </div>
   Button Text 
 </Button> -->
+{#await promise}
+  <p>Loading...</p>
+{:then todos}
+  <h2>{todos.length} TO DOs</h2>
 
-<h2>{todos.length} TO DOs</h2>
+  <label>
+    <input type="checkbox" bind:checked={showList} />
+    Show List
+  </label>
+  {#if showList}
+    <div style:max-width="400px">
+      <TodoList
+        {todos}
+        bind:this={todoList}
+        on:removetodo={handleRemoveTodo}
+        on:addtodo={handleAddTodo}
+        on:toggletodo={handleToggleTodo}
+      />
+    </div>
+  {/if}
+{:catch error}
+  <p>{error.message || "An error occurred"}</p>
+{/await}
 
-<label>
-  <input type="checkbox" bind:checked={showList} />
-  Show List
-</label>
-{#if showList}
-  <div style:max-width="400px">
-    <TodoList
-      {todos}
-      bind:this={todoList}
-      on:removetodo={handleRemoveTodo}
-      on:addtodo={handleAddTodo}
-      on:toggletodo={handleToggleTodo}
-    />
-  </div>
-{/if}
+<button on:click={() => {
+  promise = loadTodos();
+}}>Refresh</button>
 
 <!-- <button on:click={() => todoList.focusInput()}> Focus </button> -->
 

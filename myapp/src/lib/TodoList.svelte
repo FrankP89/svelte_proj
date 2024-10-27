@@ -41,7 +41,7 @@
     const dispatch = createEventDispatcher();
 
     $: {
-        console.log(prevTodos, todos);
+        // console.log(prevTodos, todos);
 
         autoScroll = todos.length > prevTodos.length;
         prevTodos = todos;
