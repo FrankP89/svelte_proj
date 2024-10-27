@@ -4,6 +4,9 @@
     export let shadow = false;
     export let bgColor = "inherit"; // Inherit in case there's no info provided
     export let textColor = "inherit";
+    // export let disabled = false;
+
+    console.log($$restProps); // This will show the rest of the props
 
     let isLeftHovered;
 </script>
@@ -15,6 +18,7 @@
     style:--buttonTextColor={textColor}
     class:shadow
     class:active={shadow}
+    {...$$restProps} 
 >
     {#if $$slots.leftContent} <!-- If there's a slot named leftContent, add the div -->
         <div 
@@ -51,8 +55,12 @@
             // background-color: variables.$color;
             background-image: linear-gradient(rgba(0, 0, 0, 0.4) 0 0);
         }
-        &.active {
+        &:active {
             background-image: linear-gradient(rgba(255, 255, 255, 0.1) 0 0);
+        }
+        &:disabled{
+            opacity: 0.4;
+            cursor: not-allowed;
         }
         &.size-sm {
             padding: 15px 20px;

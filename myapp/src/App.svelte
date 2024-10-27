@@ -7,6 +7,28 @@
   import GiTrackedRobot from "svelte-icons/gi/GiTrackedRobot.svelte";
   import GiRobotLeg from "svelte-icons/gi/GiRobotLeg.svelte";
 
+  import TodoList from "./lib/TodoList.svelte";
+  import {v4 as uuid} from "uuid";
+    import { compile } from "svelte/compiler";
+
+  const todos = [
+    {
+      id: uuid(),
+      title: 'Todo 1',
+      complete: true
+    },
+    {
+      id: uuid(),
+      title: 'Todo 2',
+      complete: false
+    },
+    {
+      id: uuid(),
+      title: 'Todo 3',
+      complete: false
+    }
+  ]
+
   const maxCount = 6;
   const props = { initialCount: 3, maxCount };
 </script>
@@ -14,11 +36,12 @@
 <!-- <Counter {...props} /> -->
 
 <!-- <Button title="Your Button"/> -->
-<Button
+<!-- <Button
   on:click|once={(event) => { 
     // you can add other modifiers after the | symbol
     alert(true);
   }}
+  disabled={true}
   size="small"
   shadow={true}
   bgColor="red"
@@ -32,7 +55,12 @@
     {/if}
   </div>
   Button Text 
-</Button>
+</Button> -->
+
+
+<TodoList {todos}/>
+
+
 
 <style>
 </style>
