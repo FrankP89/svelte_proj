@@ -11,7 +11,7 @@
   import {v4 as uuid} from "uuid";
     import { compile } from "svelte/compiler";
 
-  const todos = [
+  let todos = [
     {
       id: uuid(),
       title: 'Todo 1',
@@ -28,6 +28,8 @@
       complete: false
     }
   ]
+
+  $: console.log(todos);
 
   const maxCount = 6;
   const props = { initialCount: 3, maxCount };
@@ -57,8 +59,9 @@
   Button Text 
 </Button> -->
 
+<h2>{todos.length} TO DOs </h2>
 
-<TodoList {todos}/>
+<TodoList bind:todos={todos}/>
 
 
 
