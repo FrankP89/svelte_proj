@@ -9,7 +9,17 @@
     } from "svelte";
     import FaRegTrashAlt from "svelte-icons/fa/FaRegTrashAlt.svelte";
 
-    export let todos = [];
+    export let todos = null;
+    export let error = null;
+    export let isLoading = false;
+
+    export const readonly = "read only";
+    let prevTodos = todos;
+
+    let inputText = "";
+    let input, listDiv, autoScroll, listDivScrollHeight;
+
+    const dispatch = createEventDispatcher();
 
     // onMount(() => {
     //     console.log("Mounted");
@@ -32,18 +42,10 @@
         }
     });
 
-    export const readonly = "read only";
-    let prevTodos = todos;
-
-    let inputText = "";
-    let input, listDiv, autoScroll, listDivScrollHeight;
-
-    const dispatch = createEventDispatcher();
-
     $: {
         // console.log(prevTodos, todos);
 
-        autoScroll = todos.length > prevTodos.length;
+        autoScroll = todos && prevTodos && todos.length > prevTodos.length;
         prevTodos = todos;
     }
 
@@ -108,46 +110,53 @@
 </script>
 
 <div class="todo-list-wrapper">
-    <div class="todo-list" bind:this={listDiv}>
-        <div bind:offsetHeight={listDivScrollHeight}>
-            {#if todos.length === 0}
-                <p class="no-items-text">No To Dos yet</p>
-            {:else}
-                <ul>
-                    {#each todos as { id, title, completed }, index (id)}
-                        <!-- {@debug id, title}
+    {#if isLoading}
+        <p class="state-text">Loading...</p>
+    {:else if error}
+        <p class="state-text">{error}</p>
+    {:else if todos}
+        <div class="todo-list" bind:this={listDiv}>
+            <div bind:offsetHeight={listDivScrollHeight}>
+                {#if todos.length === 0}
+                    <p class="state-text">No To Dos yet</p>
+                {:else}
+                    <ul>
+                        {#each todos as { id, title, completed }, index (id)}
+                            <!-- {@debug id, title}
                     {@const number = index + 1} -->
-                        <li class:completed>
-                            <label>
-                                <input
-                                    on:input={(event) => {
-                                        event.currentTarget.checked = completed;
-                                        handleToggleTodo(id, !completed);
-                                    }}
-                                    type="checkbox"
-                                    checked={completed}
-                                />
+                            <li class:completed>
+                                <label>
+                                    <input
+                                        on:input={(event) => {
+                                            event.currentTarget.checked =
+                                                completed;
+                                            handleToggleTodo(id, !completed);
+                                        }}
+                                        type="checkbox"
+                                        checked={completed}
+                                    />
 
-                                {title}
-                            </label>
-                            <button
-                                class="remove-todo-button"
-                                aria-label="Remove ToDo: {title}"
-                                on:click={() => handleRemoveTodo(id)}
-                            >
-                                <span
-                                    style:width="10px"
-                                    style:display="inline-block"
+                                    {title}
+                                </label>
+                                <button
+                                    class="remove-todo-button"
+                                    aria-label="Remove ToDo: {title}"
+                                    on:click={() => handleRemoveTodo(id)}
                                 >
-                                    <FaRegTrashAlt />
-                                </span>
-                            </button>
-                        </li>
-                    {/each}
-                </ul>
-            {/if}
+                                    <span
+                                        style:width="10px"
+                                        style:display="inline-block"
+                                    >
+                                        <FaRegTrashAlt />
+                                    </span>
+                                </button>
+                            </li>
+                        {/each}
+                    </ul>
+                {/if}
+            </div>
         </div>
-    </div>
+    {/if}
     <form class="add-todo-form" on:submit|preventDefault={handleAddTodo}>
         <!-- <input bind:this={input}/> -->
         <!-- <input on:input={e => {
@@ -168,7 +177,7 @@
     .todo-list-wrapper {
         background-color: #424242;
         border: 1px solid #4b4b4b;
-        .no-items-text {
+        .state-text {
             margin: 0;
             padding: 15px;
             text-align: center;
@@ -222,9 +231,7 @@
                             display: block;
                         }
                     }
-                    
                 }
-                
             }
         }
         .add-todo-form {
@@ -240,8 +247,7 @@
                 padding: 10px;
                 color: #fff;
                 border-radius: 5px;
-                margin-right: 10px;                
-                
+                margin-right: 10px;
             }
         }
     }

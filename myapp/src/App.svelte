@@ -13,25 +13,34 @@
 
   import TodoList from "./lib/TodoList.svelte";
   import { v4 as uuid } from "uuid";
-  import { tick } from "svelte";
+  import { onMount, tick } from "svelte";
 
   let todoList = [];
   let showList = true;
 
   let todos = null;
+  let error = null;
+  let isLoading = true;
   let promise = loadTodos();
   // $: console.log(todos);  // Reactive variables
 
-  function loadTodos() {
-    return fetch("https://jsonplaceholder.typicode.com/todos?_limit=10").then(
-      (response) => {
+  onMount(() => {
+    loadTodos();
+  });
+
+  async function loadTodos() {
+    isLoading = true;
+    await fetch("https://jsonplaceholder.typicode.com/todos?_limit=10").then(
+      async (response) => {
         if (response.ok) {
-          return response.json();
+          todos = await response.json();
         } else {
-          throw new Error("Unable to fetch data from the server");
+          error = "Unable to load data from the server";
+          // throw new Error(error);
         }
       },
     );
+    isLoading = false;
   }
 
   async function handleAddTodo(event) {
@@ -97,10 +106,9 @@
   </div>
   Button Text 
 </Button> -->
-{#await promise}
-  <p>Loading...</p>
-{:then todos}
-  <h2>{todos.length} TO DOs</h2>
+
+<!-- {#if todos}
+  <h2>{todos.length} TO DOs</h2> -->
 
   <label>
     <input type="checkbox" bind:checked={showList} />
@@ -110,6 +118,8 @@
     <div style:max-width="400px">
       <TodoList
         {todos}
+        {error}
+        {isLoading}
         bind:this={todoList}
         on:removetodo={handleRemoveTodo}
         on:addtodo={handleAddTodo}
@@ -117,13 +127,7 @@
       />
     </div>
   {/if}
-{:catch error}
-  <p>{error.message || "An error occurred"}</p>
-{/await}
-
-<button on:click={() => {
-  promise = loadTodos();
-}}>Refresh</button>
+<!-- {/if} -->
 
 <!-- <button on:click={() => todoList.focusInput()}> Focus </button> -->
 
