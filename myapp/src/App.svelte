@@ -114,7 +114,7 @@
   Show List
 </label>
 {#if showList}
-  <div style:max-width="200px">
+  <div style:max-width="400px">
     <TodoList
       {todos}
       bind:this={todoList}
