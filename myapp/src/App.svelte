@@ -34,7 +34,6 @@
       completed: false,
     },
   ];
-
   // $: console.log(todos);  // Reactive variables
 
   function handleAddTodo(event) {
@@ -59,9 +58,6 @@
     todos = todos.filter((t) => t.id !== event.detail.id);
   }
 
-  const maxCount = 6;
-  const props = { initialCount: 3, maxCount };
-
   function handleToggleTodo(event) {
     todos = todos.map((todo) => {
       if (todo.id === event.detail.id) {
@@ -74,6 +70,10 @@
       }
     });
   }
+
+  const maxCount = 6;
+  const props = { initialCount: 3, maxCount };
+
 </script>
 
 <!-- <Counter {...props} /> -->

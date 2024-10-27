@@ -26,7 +26,7 @@
 
     afterUpdate(() => {
         if (autoScroll) {
-            listDiv.scrollTo(0, listDiv.scrollHeight);
+            listDiv.scrollTo(0, listDivScrollHeight);
             autoScroll = false;
         }
     });
@@ -44,11 +44,12 @@
     export function clearInput() {
         inputText = "";
     }
+
     export function focusInput() {
         input.focus();
     }
     let inputText = "";
-    let input, listDiv, autoScroll;
+    let input, listDiv, autoScroll, listDivScrollHeight;
 
     const dispatch = createEventDispatcher();
 
@@ -104,8 +105,11 @@
     }
 </script>
 
+
 <div class="todo-list-wrapper">
-    <div class="todo-list" bind:this={listDiv}>
+    <div class="todo-list"         
+        bind:this={listDiv}>
+        <div bind:offsetHeight={listDivScrollHeight}>
         <ul>
             {#each todos as { id, title, completed }, index (id)}
                 <!-- {@debug id, title}
@@ -129,6 +133,7 @@
                 </li>
             {/each}
         </ul>
+        </div>
     </div>
     <form class="add-todo-form" on:submit|preventDefault={handleAddTodo}>
         <!-- <input bind:this={input}/> -->
