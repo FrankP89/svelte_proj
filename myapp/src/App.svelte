@@ -1,6 +1,8 @@
 <svelte:options immutable={true} />
 
 <script>
+  // @ts-nocheck
+
   // let name = 'svelte';
   // let src = 'https://picsum.photos/200/300';
   // let string = 'Some <strong>string</strong> with html'
@@ -11,7 +13,8 @@
 
   import TodoList from "./lib/TodoList.svelte";
   import { v4 as uuid } from "uuid";
-  import { compile } from "svelte/compiler";
+
+  let todoList = [];
 
   let todos = [
     {
@@ -34,34 +37,41 @@
   // $: console.log(todos);
 
   function handleAddTodo(event) {
-    // event.preventDefault();
-    // This approach creates new arrays
-    todos = [...todos, {
-      id: uuid(),
-      title: event.detail.title,
-      completed: false
-    }];
+    event.preventDefault();
+
+    setTimeout(() => {
+      // Gives some time for the form to be submitted
+      // This approach creates new arrays
+      todos = [
+        ...todos,
+        {
+          id: uuid(),
+          title: event.detail.title,
+          completed: false,
+        },
+      ];
+      todoList.clearInput();
+    }, 1000); // 1 second
   }
 
   function handleRemoveTodo(event) {
-    todos = todos.filter(t => t.id !== event.detail.id);
+    todos = todos.filter((t) => t.id !== event.detail.id);
   }
 
   const maxCount = 6;
   const props = { initialCount: 3, maxCount };
 
-
   function handleToggleTodo(event) {
-    todos = todos.map(todo => {
-      if(todo.id === event.detail.id) {
+    todos = todos.map((todo) => {
+      if (todo.id === event.detail.id) {
         return {
           ...todo,
-          completed: event.detail.value
-        }
+          completed: event.detail.value,
+        };
       } else {
-        return {...todo}
+        return { ...todo };
       }
-    })
+    });
   }
 </script>
 
@@ -91,12 +101,15 @@
 
 <h2>{todos.length} TO DOs</h2>
 
-<TodoList 
-  {todos} 
-  on:removetodo={handleRemoveTodo} 
-  on:addtodo={handleAddTodo} 
+<TodoList
+  {todos}
+  bind:this={todoList}
+  on:removetodo={handleRemoveTodo}
+  on:addtodo={handleAddTodo}
   on:toggletodo={handleToggleTodo}
-  />
+/>
+
+<button on:click={() => todoList.focusInput()}> Focus </button>
 
 <style>
 </style>
