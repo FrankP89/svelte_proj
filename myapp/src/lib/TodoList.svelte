@@ -49,6 +49,13 @@
             });
         }
 
+        function handleToggleTodo(id, value) {
+            dispatch('toggletodo', {
+                id,
+                value
+            })
+        }
+
 
 
 
@@ -59,8 +66,16 @@
         {#each todos as { id, title, completed}, index (id)}
             {@const number = index + 1}
             <li>
-                <label>
-                    <input type="checkbox" checked={completed}/>
+                <label >
+                    <input 
+                        
+                        on:input={(event) => {
+                            event.currentTarget.checked = completed;
+                            handleToggleTodo(id, !completed);
+                        }}
+                        type="checkbox" 
+                        checked={completed}
+                    />
                     
                     {title}
                 </label>

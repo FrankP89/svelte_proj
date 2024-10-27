@@ -49,6 +49,20 @@
 
   const maxCount = 6;
   const props = { initialCount: 3, maxCount };
+
+
+  function handleToggleTodo(event) {
+    todos = todos.map(todo => {
+      if(todo.id === event.detail.id) {
+        return {
+          ...todo,
+          completed: event.detail.value
+        }
+      } else {
+        return {...todo}
+      }
+    })
+  }
 </script>
 
 <!-- <Counter {...props} /> -->
@@ -80,7 +94,9 @@
 <TodoList 
   {todos} 
   on:removetodo={handleRemoveTodo} 
-  on:addtodo={handleAddTodo} />
+  on:addtodo={handleAddTodo} 
+  on:toggletodo={handleToggleTodo}
+  />
 
 <style>
 </style>
