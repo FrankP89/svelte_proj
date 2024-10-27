@@ -1,3 +1,5 @@
+<svelte:options immutable={true} />
+
 <script>
   // let name = 'svelte';
   // let src = 'https://picsum.photos/200/300';
@@ -15,17 +17,17 @@
     {
       id: uuid(),
       title: "Todo 1",
-      complete: true,
+      completed: true,
     },
     {
       id: uuid(),
       title: "Todo 2",
-      complete: false,
+      completed: false,
     },
     {
       id: uuid(),
       title: "Todo 3",
-      complete: false,
+      completed: false,
     },
   ];
 
@@ -33,7 +35,12 @@
 
   function handleAddTodo(event) {
     // event.preventDefault();
-    console.log(event.detail.title);
+    // This approach creates new arrays
+    todos = [...todos, {
+      id: uuid(),
+      title: event.detail.title,
+      completed: false
+    }];
   }
 
   const maxCount = 6;
