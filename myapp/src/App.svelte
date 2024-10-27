@@ -13,6 +13,7 @@
 
   import TodoList from "./lib/TodoList.svelte";
   import { v4 as uuid } from "uuid";
+  import { tick } from "svelte";
 
   let todoList = [];
   let showList = true;
@@ -36,10 +37,10 @@
   ];
   // $: console.log(todos);  // Reactive variables
 
-  function handleAddTodo(event) {
+  async function handleAddTodo(event) {
     event.preventDefault();
 
-    setTimeout(() => {
+    setTimeout(async() => {
       // Gives some time for the form to be submitted
       // This approach creates new arrays
       todos = [
@@ -50,6 +51,7 @@
           completed: false,
         },
       ];
+      await tick();
       todoList.clearInput();
     }, 500); // 500 = 0.5 second
   }
