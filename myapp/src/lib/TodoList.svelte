@@ -19,17 +19,28 @@
     });
 
     beforeUpdate(() => {
-        if (listDiv){
-        console.log(listDiv.offsetHeight, "Before Update");
+        if (listDiv) {
+            console.log(listDiv.offsetHeight, "Before Update");
         }
-        }
-    );
+    });
 
     afterUpdate(() => {
-        console.log(listDiv.offsetHeight, "After Update");
+        if (autoScroll) {
+            listDiv.scrollTo(0, listDiv.scrollHeight);
+            autoScroll = false;
+        }
     });
 
     export const readonly = "read only";
+    let prevTodos = todos;
+
+    $: {
+        console.log(prevTodos, todos);
+
+        autoScroll = todos.length > prevTodos.length;
+        prevTodos = todos;
+    }
+
     export function clearInput() {
         inputText = "";
     }
@@ -37,7 +48,7 @@
         input.focus();
     }
     let inputText = "";
-    let input, listDiv;
+    let input, listDiv, autoScroll;
 
     const dispatch = createEventDispatcher();
 
@@ -130,3 +141,10 @@
         <Button type="submit" disabled={!inputText}>Add</Button>
     </form>
 </div>
+
+<style>
+    .todo-list {
+        max-height: 150px;
+        overflow: auto;
+    }
+</style>

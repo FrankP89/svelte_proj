@@ -52,7 +52,7 @@
         },
       ];
       todoList.clearInput();
-    }, 1000); // 1 second
+    }, 500); // 500 = 0.5 second
   }
 
   function handleRemoveTodo(event) {
@@ -107,17 +107,16 @@
   Show List
 </label>
 {#if showList}
-
-<TodoList
-  {todos}
-  bind:this={todoList}
-  on:removetodo={handleRemoveTodo}
-  on:addtodo={handleAddTodo}
-  on:toggletodo={handleToggleTodo}
-/>
-
+  <div style:max-width="200px">
+    <TodoList
+      {todos}
+      bind:this={todoList}
+      on:removetodo={handleRemoveTodo}
+      on:addtodo={handleAddTodo}
+      on:toggletodo={handleToggleTodo}
+    />
+  </div>
 {/if}
-
 
 <!-- <button on:click={() => todoList.focusInput()}> Focus </button> -->
 
