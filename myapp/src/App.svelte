@@ -32,6 +32,11 @@
     {
       id: uuid(),
       title: "Todo 3",
+      completed: true,
+    },
+    {
+      id: uuid(),
+      title: "Todo 4 with a long long long long long text",
       completed: false,
     },
   ];
