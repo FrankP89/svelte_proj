@@ -8,28 +8,33 @@
   import GiRobotLeg from "svelte-icons/gi/GiRobotLeg.svelte";
 
   import TodoList from "./lib/TodoList.svelte";
-  import {v4 as uuid} from "uuid";
-    import { compile } from "svelte/compiler";
+  import { v4 as uuid } from "uuid";
+  import { compile } from "svelte/compiler";
 
   let todos = [
     {
       id: uuid(),
-      title: 'Todo 1',
-      complete: true
+      title: "Todo 1",
+      complete: true,
     },
     {
       id: uuid(),
-      title: 'Todo 2',
-      complete: false
+      title: "Todo 2",
+      complete: false,
     },
     {
       id: uuid(),
-      title: 'Todo 3',
-      complete: false
-    }
-  ]
+      title: "Todo 3",
+      complete: false,
+    },
+  ];
 
-  $: console.log(todos);
+  // $: console.log(todos);
+
+  function handleAddTodo(event) {
+    // event.preventDefault();
+    console.log(event.detail.title);
+  }
 
   const maxCount = 6;
   const props = { initialCount: 3, maxCount };
@@ -59,11 +64,9 @@
   Button Text 
 </Button> -->
 
-<h2>{todos.length} TO DOs </h2>
+<h2>{todos.length} TO DOs</h2>
 
-<TodoList bind:todos={todos}/>
-
-
+<TodoList {todos} on:addtodo={handleAddTodo} />
 
 <style>
 </style>
