@@ -1,5 +1,6 @@
 <script>
     import Button from "./Button.svelte";
+    import {v4 as uuid} from "uuid";
 
     export let todos = [];
     let input;
@@ -7,7 +8,25 @@
 
     function handleAddTodo() {
         // console.log(input.value);
-        console.log(inputText);
+        if (!inputText) {
+            return;
+        }
+        else{
+            console.log(inputText);
+            // todos.push({
+            //     id: uuid(),
+            //     title: inputText,
+            //     complete: false
+            // });
+            // todos = todos;
+            todos = [...todos, {
+                id: uuid(),
+                title: inputText,
+                complete: false
+            }]
+
+            inputText = ''; // This is to remove the previous input
+        }
     }
 </script>
 
@@ -29,7 +48,9 @@
         <input 
             bind:value={inputText}
         />
-        <Button type="submit">Add</Button>
+        <Button type="submit" disabled={!inputText}>
+            Add
+        </Button>
     </form>
 
 </div>
