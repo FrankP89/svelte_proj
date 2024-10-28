@@ -8,6 +8,7 @@
         afterUpdate,
     } from "svelte";
     import FaRegTrashAlt from "svelte-icons/fa/FaRegTrashAlt.svelte";
+    import { flip } from "svelte/animate";
     import { scale } from "svelte/transition";
 
     export let todos = null;
@@ -129,7 +130,7 @@
                             <!-- {@debug id, title}
                             {@const number = index + 1} -->
                             {@const {id, completed, title} = todo }
-                            <li >
+                            <li animate:flip={{duration: 300}}>
                                 <slot {todo}>
                                     <div 
                                         class:completed
