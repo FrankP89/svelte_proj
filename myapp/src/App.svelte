@@ -182,7 +182,12 @@
       on:removetodo={handleRemoveTodo}
       on:addtodo={handleAddTodo}
       on:toggletodo={handleToggleTodo}
-    />
+      let:todo
+    >
+    <!-- <div> 
+      {todo.title}
+    </div> -->
+    </TodoList>
   </div>
 {/if}
 

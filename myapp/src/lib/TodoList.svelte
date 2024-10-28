@@ -124,36 +124,53 @@
                     <p class="state-text">No To Dos yet</p>
                 {:else}
                     <ul>
-                        {#each todos as { id, title, completed }, index (id)}
+                        {#each todos as todo (todo.id)}
                             <!-- {@debug id, title}
-                    {@const number = index + 1} -->
-                            <li class:completed>
-                                <label >
-                                    <input
-                                        disabled={disabledItems.includes(id) || disableToggleItems.includes(id)}
-                                        on:input={(event) => {
-                                            event.currentTarget.checked =
-                                                completed;
-                                            handleToggleTodo(id, !completed);
-                                        }}
-                                        type="checkbox"
-                                        checked={completed}
-                                    />
-                                    {title}
-                                </label>
-                                <button
-                                    disabled={disabledItems.includes(id) || disableToggleItems.includes(id)}
-                                    class="remove-todo-button"
-                                    aria-label="Remove ToDo: {title}"
-                                    on:click={() => handleRemoveTodo(id)}
-                                >
-                                    <span
-                                        style:width="10px"
-                                        style:display="inline-block"
-                                    >
-                                        <FaRegTrashAlt />
-                                    </span>
-                                </button>
+                            {@const number = index + 1} -->
+                            {@const {id, completed, title} = todo }
+                            <li>
+                                <slot {todo}>
+                                    <div class="class-completed">
+                                        <label>
+                                            <input
+                                                disabled={disabledItems.includes(
+                                                    id,
+                                                ) ||
+                                                    disableToggleItems.includes(
+                                                        id,
+                                                    )}
+                                                on:input={(event) => {
+                                                    event.currentTarget.checked =
+                                                        completed;
+                                                    handleToggleTodo(
+                                                        id,
+                                                        !completed,
+                                                    );
+                                                }}
+                                                type="checkbox"
+                                                checked={completed}
+                                            />
+                                            {title}
+                                        </label>
+                                        <button
+                                            disabled={disabledItems.includes(
+                                                id,
+                                            ) ||
+                                                disableToggleItems.includes(id)}
+                                            class="remove-todo-button"
+                                            aria-label="Remove ToDo: {title}"
+                                            on:click={() =>
+                                                handleRemoveTodo(id)}
+                                        >
+                                            <span
+                                                style:width="10px"
+                                                style:display="inline-block"
+                                            >
+                                                <FaRegTrashAlt />
+                                            </span>
+                                        </button>
+                                    </div>
+                                </slot>
                             </li>
                         {/each}
                     </ul>
@@ -174,9 +191,7 @@
             bind:value={inputText}
             placeholder="Add a To Do"
         />
-        <Button 
-            type="submit" 
-            disabled={!inputText || disableAdding || !todos}>
+        <Button type="submit" disabled={!inputText || disableAdding || !todos}>
             Add
         </Button>
     </form>
@@ -198,7 +213,7 @@
                 margin: 0;
                 padding: 10px;
                 list-style: none;
-                li {
+                li > div {
                     margin-bottom: 5px;
                     display: flex;
                     align-items: center;
@@ -237,7 +252,7 @@
                         display: none;
                         &:disabled {
                             opacity: 0.4;
-                            cursor:not-allowed;
+                            cursor: not-allowed;
                         }
                         :global(svg) {
                             fill: #bd1414;
@@ -248,7 +263,6 @@
                             display: block;
                         }
                     }
-                    
                 }
             }
         }
