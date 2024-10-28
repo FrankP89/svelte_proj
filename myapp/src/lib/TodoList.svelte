@@ -8,6 +8,7 @@
         afterUpdate,
     } from "svelte";
     import FaRegTrashAlt from "svelte-icons/fa/FaRegTrashAlt.svelte";
+    import { scale } from "svelte/transition";
 
     export let todos = null;
     export let error = null;
@@ -128,17 +129,17 @@
                             <!-- {@debug id, title}
                             {@const number = index + 1} -->
                             {@const {id, completed, title} = todo }
-                            <li>
+                            <li >
                                 <slot {todo}>
-                                    <div class="class-completed">
+                                    <div 
+                                        class:completed
+                                        transition:scale|local={{start: 0.5, duration: 300}} 
+                                        >
                                         <label>
                                             <input
                                                 disabled={disabledItems.includes(
                                                     id,
-                                                ) ||
-                                                    disableToggleItems.includes(
-                                                        id,
-                                                    )}
+                                                ) }
                                                 on:input={(event) => {
                                                     event.currentTarget.checked =
                                                         completed;
@@ -155,8 +156,7 @@
                                         <button
                                             disabled={disabledItems.includes(
                                                 id,
-                                            ) ||
-                                                disableToggleItems.includes(id)}
+                                            ) }
                                             class="remove-todo-button"
                                             aria-label="Remove ToDo: {title}"
                                             on:click={() =>
@@ -233,10 +233,10 @@
                             margin: 0 10px 0 0;
                             cursor: pointer;
                         }
-                        &:disabled {
-                            opacity: 0.4;
-                            cursor: not-allowed;
-                        }
+                        // &:disabled {
+                        //     opacity: 0.4;
+                        //     cursor: not-allowed;
+                        // }
                     }
                     &.completed > label {
                         opacity: 0.5;
