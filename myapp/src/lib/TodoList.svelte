@@ -14,6 +14,7 @@
     export let isLoading = false;
     export let disableAdding = false;
     export let disabledItems = [];
+    export let disableToggleItems = [];
 
     export const readonly = "read only";
     let prevTodos = todos;
@@ -127,9 +128,9 @@
                             <!-- {@debug id, title}
                     {@const number = index + 1} -->
                             <li class:completed>
-                                <label>
+                                <label >
                                     <input
-                                        disabled={disabledItems.includes(id)}
+                                        disabled={disabledItems.includes(id) || disableToggleItems.includes(id)}
                                         on:input={(event) => {
                                             event.currentTarget.checked =
                                                 completed;
@@ -138,11 +139,10 @@
                                         type="checkbox"
                                         checked={completed}
                                     />
-
                                     {title}
                                 </label>
                                 <button
-                                    disabled={disabledItems.includes(id)}
+                                    disabled={disabledItems.includes(id) || disableToggleItems.includes(id)}
                                     class="remove-todo-button"
                                     aria-label="Remove ToDo: {title}"
                                     on:click={() => handleRemoveTodo(id)}
@@ -218,6 +218,10 @@
                             margin: 0 10px 0 0;
                             cursor: pointer;
                         }
+                        &:disabled {
+                            opacity: 0.4;
+                            cursor: not-allowed;
+                        }
                     }
                     &.completed > label {
                         opacity: 0.5;
@@ -244,6 +248,7 @@
                             display: block;
                         }
                     }
+                    
                 }
             }
         }

@@ -24,6 +24,7 @@
   let promise = loadTodos();
   let isAdding = false;
   let disabledItems = [];
+  let disabledToggleItems = [];
   // $: console.log(todos);  // Reactive variables
 
   onMount(() => {
@@ -98,20 +99,39 @@
       }
     });
     // You want to remove the id from the disabledItems
-    disabledItems = disabledItems.filter(itemId => itemId !== id);
+    disabledItems = disabledItems.filter((itemId) => itemId !== id);
   }
 
-  function handleToggleTodo(event) {
-    todos = todos.map((todo) => {
-      if (todo.id === event.detail.id) {
-        return {
-          ...todo,
-          completed: event.detail.value,
-        };
+  async function handleToggleTodo(event) {
+    const id = event.detail.id;
+    const value = event.detail.value;
+    if (disabledToggleItems.includes(id)) {
+      return;
+    }
+    disabledToggleItems = [...disabledToggleItems, id];
+    await fetch(`https://jsonplaceholder.typicode.com/todos/${id}`, {
+      method: "PATCH",
+      body: JSON.stringify({
+        completed: value,
+      }),
+      headers: {
+        "Content-type": "application/json; charset=UTF-8",
+      },
+    }).then(async (response) => {
+      if (!response.ok) {
+        error = "Unable to toggle ToDo";
+        alert(error);
       } else {
-        return { ...todo };
+        const updatedTodo = await response.json();
+        todos = todos.map((todo) => {
+          if (todo.id === id) {
+            return updatedTodo;
+          }
+          return { ...todo };
+        });
       }
     });
+    disabledToggleItems = disabledToggleItems.filter((itemId) => itemId !== id);
   }
 
   const maxCount = 6;
@@ -156,6 +176,7 @@
       {error}
       {isLoading}
       {disabledItems}
+      disableToggleItems={disabledToggleItems}
       disableAdding={isAdding}
       bind:this={todoList}
       on:removetodo={handleRemoveTodo}
