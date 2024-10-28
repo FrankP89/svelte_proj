@@ -17,7 +17,6 @@
   import { fade, fly, slide, blur } from "svelte/transition";
   import { cubicInOut } from "svelte/easing";
 
-
   let todoList = [];
   let showList = true;
 
@@ -173,14 +172,14 @@
   Show List
 </label>
 {#if showList}
-  <div 
+  <div
     in:slide={{ duration: 700, easing: cubicInOut }}
-    out:blur={{ amount:10, duration: 700 }}
+    out:blur={{ amount: 10, duration: 700 }}
     on:introstart={() => {
       console.log("introstart");
     }}
-    
-    style:max-width="400px">
+    style:max-width="400px"
+  >
     <!-- transition:fly={{ y:400, duration: 10000 }}  -->
     <TodoList
       {todos}
@@ -195,11 +194,18 @@
       on:toggletodo={handleToggleTodo}
       let:todo
     >
-    <!-- <div> 
+      <!-- <div> 
       {todo.title}
     </div> -->
     </TodoList>
   </div>
+  {#if todos}
+    <p>
+      Number of ToDos: {#key todos.length}<span style:display="inline-block" in:fly|local={{ y: -10 }}
+          >{todos.length}</span
+        >{/key}
+    </p>
+  {/if}
 {/if}
 
 <!-- {/if} -->
