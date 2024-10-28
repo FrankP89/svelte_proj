@@ -12,6 +12,7 @@
     export let todos = null;
     export let error = null;
     export let isLoading = false;
+    export let disableAdding = false;
 
     export const readonly = "read only";
     let prevTodos = todos;
@@ -165,11 +166,16 @@
         }}
         /> -->
         <input
+            disabled={disableAdding || !todos}
             bind:this={input}
             bind:value={inputText}
             placeholder="Add a To Do"
         />
-        <Button type="submit" disabled={!inputText}>Add</Button>
+        <Button 
+            type="submit" 
+            disabled={!inputText || disableAdding || !todos}>
+            Add
+        </Button>
     </form>
 </div>
 

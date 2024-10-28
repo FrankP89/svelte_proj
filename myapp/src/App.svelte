@@ -22,6 +22,7 @@
   let error = null;
   let isLoading = true;
   let promise = loadTodos();
+  let isAdding = false;
   // $: console.log(todos);  // Reactive variables
 
   onMount(() => {
@@ -45,21 +46,41 @@
 
   async function handleAddTodo(event) {
     event.preventDefault();
+    isAdding = true;
 
-    setTimeout(async () => {
-      // Gives some time for the form to be submitted
-      // This approach creates new arrays
-      todos = [
-        ...todos,
-        {
-          id: uuid(),
-          title: event.detail.title,
-          completed: false,
-        },
-      ];
-      await tick();
-      todoList.clearInput();
-    }, 500); // 500 = 0.5 second
+    await fetch("https://jsonplaceholder.typicode.com/todos", {
+      method: "POST",
+      body: JSON.stringify({
+        title: event.detail.title,
+        completed: false,
+      }),
+      headers: {
+        "Content-type": "application/json; charset=UTF-8",
+      },
+    }).then(async (response) => {
+      if (response.ok) {
+        const todo = await response.json();
+        // setTimeout(async () => {
+          // Gives some time for the form to be submitted
+          // This approach creates new arrays
+          todos = [
+            ...todos,
+            {...todo,id: uuid()}
+          ];
+          // await tick();
+          todoList.clearInput();
+        // }, 500); // 500 = 0.5 second
+        // return response.json();
+      } else {
+        error = "Unable to add ToDo";
+        alert(error);
+      }
+    });
+
+    isAdding = false;
+
+    await tick(); // This will ensure all changes are applied to the DOM
+    todoList.focusInput();
   }
 
   function handleRemoveTodo(event) {
@@ -110,23 +131,25 @@
 <!-- {#if todos}
   <h2>{todos.length} TO DOs</h2> -->
 
-  <label>
-    <input type="checkbox" bind:checked={showList} />
-    Show List
-  </label>
-  {#if showList}
-    <div style:max-width="400px">
-      <TodoList
-        {todos}
-        {error}
-        {isLoading}
-        bind:this={todoList}
-        on:removetodo={handleRemoveTodo}
-        on:addtodo={handleAddTodo}
-        on:toggletodo={handleToggleTodo}
-      />
-    </div>
-  {/if}
+<label>
+  <input type="checkbox" bind:checked={showList} />
+  Show List
+</label>
+{#if showList}
+  <div style:max-width="400px">
+    <TodoList
+      {todos}
+      {error}
+      {isLoading}
+      disableAdding={isAdding}
+      bind:this={todoList}
+      on:removetodo={handleRemoveTodo}
+      on:addtodo={handleAddTodo}
+      on:toggletodo={handleToggleTodo}
+    />
+  </div>
+{/if}
+
 <!-- {/if} -->
 
 <!-- <button on:click={() => todoList.focusInput()}> Focus </button> -->
