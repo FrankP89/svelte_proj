@@ -16,6 +16,7 @@
   import { onMount, tick } from "svelte";
   import { fade, fly, slide, blur } from "svelte/transition";
   import { cubicInOut } from "svelte/easing";
+  import spin from "./lib/transitions/spin.js";
 
   let todoList = [];
   let showList = true;
@@ -172,14 +173,15 @@
   Show List
 </label>
 {#if showList}
-  <div
-    in:slide={{ duration: 700, easing: cubicInOut }}
-    out:blur={{ amount: 10, duration: 700 }}
-    on:introstart={() => {
-      console.log("introstart");
-    }}
-    style:max-width="400px"
+  <div transition:spin={{ spin: 1, duration: 4000 }} 
+  style:max-width="400px"
   >
+    <!-- in:slide={{ duration: 700, easing: cubicInOut }}
+    out:blur={{ amount: 10, duration: 700 }} -->
+    <!-- on:introstart={() => {
+      console.log("introstart");
+    }} -->
+    <!-- style="opacity:0.5; transform: rotate(90deg)" -->
     <!-- transition:fly={{ y:400, duration: 10000 }}  -->
     <TodoList
       {todos}
@@ -201,8 +203,9 @@
   </div>
   {#if todos}
     <p>
-      Number of ToDos: {#key todos.length}<span style:display="inline-block" in:fly|local={{ y: -10 }}
-          >{todos.length}</span
+      Number of ToDos: {#key todos.length}<span
+          style:display="inline-block"
+          in:fly|local={{ y: -10 }}>{todos.length}</span
         >{/key}
     </p>
   {/if}
