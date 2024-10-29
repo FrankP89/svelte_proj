@@ -1,4 +1,4 @@
-<svelte:options immutable={true} />
+<!-- <svelte:options immutable={true} />
 
 <script>
   // @ts-nocheck
@@ -173,7 +173,7 @@
 <!-- {#if todos}
   <h2>{todos.length} TO DOs</h2> -->
 
-<label>
+<!-- <label>
   <input type="checkbox" bind:checked={showList} />
   Show List
 </label>
@@ -190,7 +190,7 @@
     }} -->
     <!-- style="opacity:0.5; transform: rotate(90deg)" -->
     <!-- transition:fly={{ y:400, duration: 10000 }}  -->
-    <TodoList
+    <!-- <TodoList
       {todos}
       {error}
       {isLoading}
@@ -202,11 +202,11 @@
       on:addtodo={handleAddTodo}
       on:toggletodo={handleToggleTodo}
       let:todo
-    >
+    > -->
       <!-- <div> 
       {todo.title}
     </div> -->
-    </TodoList>
+    <!-- </TodoList>
   </div>
   {#if todos}
     <p>
@@ -216,11 +216,45 @@
         >{/key}
     </p>
   {/if}
-{/if}
+{/if} -->
 
 <!-- {/if} -->
 
 <!-- <button on:click={() => todoList.focusInput()}> Focus </button> -->
 
+<!-- <style>
+</style>   -->
+
+
+<script>
+  import longpress from "./lib/actions/longpress.js";
+
+  let showButton = true;
+  let duration = 1000;
+</script>
+
+<label>
+  <input type="checkbox" bind:checked={showButton} />
+  Toggle
+</label>
+
+<label>
+  <input type="range" 
+  bind:value={duration} 
+  min="100" 
+  max="4000"
+  step="100"
+  />
+  {duration}ms
+</label>
+
+{#if showButton}
+  <button use:longpress={{ duration }}>
+    Hello
+  </button>
+{/if}
+
+
 <style>
+
 </style>
