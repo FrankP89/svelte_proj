@@ -179,8 +179,9 @@
 </label>
 {#if showList}
   <div 
-    transition:myfade={{ duration: 500 }} 
+    
     style:max-width="800px">
+    <!-- transition:myfade={{ duration: 500 }}  -->
     <!-- transition:myfade={{ duration: 500 }}  -->
     <!-- in:slide={{ duration: 700, easing: cubicInOut }}
     out:blur={{ amount: 10, duration: 700 }} -->

@@ -9,7 +9,16 @@
     } from "svelte";
     import FaRegTrashAlt from "svelte-icons/fa/FaRegTrashAlt.svelte";
     import { flip } from "svelte/animate";
-    import { scale } from "svelte/transition";
+    import { cubicInOut } from "svelte/easing";
+    import { scale, crossfade } from "svelte/transition";
+
+    const [send, receive] = crossfade({
+        duration: 300,
+        easing: cubicInOut,
+        fallback(node) {
+            return scale(node, {start:0.5, duration: 300})
+        }
+    });
 
     export let todos = null;
     export let error = null;
@@ -24,8 +33,8 @@
     let inputText = "";
     let input, listDiv, autoScroll, listDivScrollHeight;
 
-    $: done = todos ? todos.filter(t => t.completed) : [];
-    $: todo = todos ? todos.filter(t => !t.completed) : [];
+    $: done = todos ? todos.filter((t) => t.completed) : [];
+    $: todo = todos ? todos.filter((t) => !t.completed) : [];
 
     const dispatch = createEventDispatcher();
 
@@ -128,69 +137,72 @@
                 {#if todos.length === 0}
                     <p class="state-text">No To Dos yet</p>
                 {:else}
-                    <div
-                        style:display="flex"
-                        
-                    >
-                    <!-- style:justify-content="space-between" -->
+                    <div style:display="flex">
+                        <!-- style:justify-content="space-between" -->
                         {#each [todo, done] as list, index}
-                        <!-- Create title for both blocks -->
-                         <div class="list-wrapper">
-                        <h2>{index === 0 ? "To Do" : "Done"}</h2>
-                        <ul>
-                            {#each list as todo (todo.id)}
-                                <!-- {@debug id, title}
+                            <!-- Create title for both blocks -->
+                            <div class="list-wrapper">
+                                <h2>{index === 0 ? "To Do" : "Done"}</h2>
+                                <ul>
+                                    {#each list as todo (todo.id)}
+                                        <!-- {@debug id, title}
                             {@const number = index + 1} -->
-                                {@const { id, completed, title } = todo}
-                                <li animate:flip={{ duration: 300 }}>
-                                    <slot {todo}>
-                                        <div
-                                            class:completed
-                                            transition:scale|local={{
-                                                start: 0.5,
-                                                duration: 300,
-                                            }}
-                                        >
-                                            <label>
-                                                <input
-                                                    disabled={disabledItems.includes(
-                                                        id,
-                                                    )}
-                                                    on:input={(event) => {
-                                                        event.currentTarget.checked =
-                                                            completed;
-                                                        handleToggleTodo(
-                                                            id,
-                                                            !completed,
-                                                        );
-                                                    }}
-                                                    type="checkbox"
-                                                    checked={completed}
-                                                />
-                                                {title}
-                                            </label>
-                                            <button
-                                                disabled={disabledItems.includes(
-                                                    id,
-                                                )}
-                                                class="remove-todo-button"
-                                                aria-label="Remove ToDo: {title}"
-                                                on:click={() =>
-                                                    handleRemoveTodo(id)}
-                                            >
-                                                <span
-                                                    style:width="10px"
-                                                    style:display="inline-block"
+                                        {@const { id, completed, title } = todo}
+                                        <li animate:flip={{ duration: 300 }}>
+                                            <slot {todo}>
+                                                <div
+                                                    in:receive|local={{key: id}}
+                                                    out:send|local={{key: id}}
+                                                    class:completed                                                   
                                                 >
-                                                    <FaRegTrashAlt />
-                                                </span>
-                                            </button>
-                                        </div>
-                                    </slot>
-                                </li>
-                            {/each}
-                        </ul>
-                    </div>
+                                                <!-- transition:scale|local={{
+                                                    start: 0.5,
+                                                    duration: 300,
+                                                }} -->
+                                                    <label>
+                                                        <input
+                                                            disabled={disabledItems.includes(
+                                                                id,
+                                                            )}
+                                                            on:input={(
+                                                                event,
+                                                            ) => {
+                                                                event.currentTarget.checked =
+                                                                    completed;
+                                                                handleToggleTodo(
+                                                                    id,
+                                                                    !completed,
+                                                                );
+                                                            }}
+                                                            type="checkbox"
+                                                            checked={completed}
+                                                        />
+                                                        {title}
+                                                    </label>
+                                                    <button
+                                                        disabled={disabledItems.includes(
+                                                            id,
+                                                        )}
+                                                        class="remove-todo-button"
+                                                        aria-label="Remove ToDo: {title}"
+                                                        on:click={() =>
+                                                            handleRemoveTodo(
+                                                                id,
+                                                            )}
+                                                    >
+                                                        <span
+                                                            style:width="10px"
+                                                            style:display="inline-block"
+                                                        >
+                                                            <FaRegTrashAlt />
+                                                        </span>
+                                                    </button>
+                                                </div>
+                                            </slot>
+                                        </li>
+                                    {/each}
+                                </ul>
+                            </div>
                         {/each}
                     </div>
                 {/if}
@@ -228,13 +240,12 @@
         .todo-list {
             max-height: 400px;
             overflow: auto;
-            .list-wrapper{
+            .list-wrapper {
                 padding: 10px;
                 flex: 1;
                 h2 {
                     margin: 0 0 10px;
                 }
-
             }
             ul {
                 margin: 0;
