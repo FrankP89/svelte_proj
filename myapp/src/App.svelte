@@ -249,7 +249,11 @@
 </label>
 
 {#if showButton}
-  <button use:longpress={{ duration }}>
+  <button use:longpress={{ duration }}
+  on:longpress={() => {
+    alert("longpress");
+  }}
+  >
     Hello
   </button>
 {/if}
