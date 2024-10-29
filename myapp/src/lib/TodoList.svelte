@@ -24,6 +24,9 @@
     let inputText = "";
     let input, listDiv, autoScroll, listDivScrollHeight;
 
+    $: done = todos ? todos.filter(t => t.completed) : [];
+    $: todo = todos ? todos.filter(t => !t.completed) : [];
+
     const dispatch = createEventDispatcher();
 
     // onMount(() => {
@@ -125,56 +128,71 @@
                 {#if todos.length === 0}
                     <p class="state-text">No To Dos yet</p>
                 {:else}
-                    <ul>
-                        {#each todos as todo (todo.id)}
-                            <!-- {@debug id, title}
+                    <div
+                        style:display="flex"
+                        
+                    >
+                    <!-- style:justify-content="space-between" -->
+                        {#each [todo, done] as list, index}
+                        <!-- Create title for both blocks -->
+                         <div class="list-wrapper">
+                        <h2>{index === 0 ? "To Do" : "Done"}</h2>
+                        <ul>
+                            {#each list as todo (todo.id)}
+                                <!-- {@debug id, title}
                             {@const number = index + 1} -->
-                            {@const {id, completed, title} = todo }
-                            <li animate:flip={{duration: 300}}>
-                                <slot {todo}>
-                                    <div 
-                                        class:completed
-                                        transition:scale|local={{start: 0.5, duration: 300}} 
+                                {@const { id, completed, title } = todo}
+                                <li animate:flip={{ duration: 300 }}>
+                                    <slot {todo}>
+                                        <div
+                                            class:completed
+                                            transition:scale|local={{
+                                                start: 0.5,
+                                                duration: 300,
+                                            }}
                                         >
-                                        <label>
-                                            <input
+                                            <label>
+                                                <input
+                                                    disabled={disabledItems.includes(
+                                                        id,
+                                                    )}
+                                                    on:input={(event) => {
+                                                        event.currentTarget.checked =
+                                                            completed;
+                                                        handleToggleTodo(
+                                                            id,
+                                                            !completed,
+                                                        );
+                                                    }}
+                                                    type="checkbox"
+                                                    checked={completed}
+                                                />
+                                                {title}
+                                            </label>
+                                            <button
                                                 disabled={disabledItems.includes(
                                                     id,
-                                                ) }
-                                                on:input={(event) => {
-                                                    event.currentTarget.checked =
-                                                        completed;
-                                                    handleToggleTodo(
-                                                        id,
-                                                        !completed,
-                                                    );
-                                                }}
-                                                type="checkbox"
-                                                checked={completed}
-                                            />
-                                            {title}
-                                        </label>
-                                        <button
-                                            disabled={disabledItems.includes(
-                                                id,
-                                            ) }
-                                            class="remove-todo-button"
-                                            aria-label="Remove ToDo: {title}"
-                                            on:click={() =>
-                                                handleRemoveTodo(id)}
-                                        >
-                                            <span
-                                                style:width="10px"
-                                                style:display="inline-block"
+                                                )}
+                                                class="remove-todo-button"
+                                                aria-label="Remove ToDo: {title}"
+                                                on:click={() =>
+                                                    handleRemoveTodo(id)}
                                             >
-                                                <FaRegTrashAlt />
-                                            </span>
-                                        </button>
-                                    </div>
-                                </slot>
-                            </li>
+                                                <span
+                                                    style:width="10px"
+                                                    style:display="inline-block"
+                                                >
+                                                    <FaRegTrashAlt />
+                                                </span>
+                                            </button>
+                                        </div>
+                                    </slot>
+                                </li>
+                            {/each}
+                        </ul>
+                    </div>
                         {/each}
-                    </ul>
+                    </div>
                 {/if}
             </div>
         </div>
@@ -208,11 +226,19 @@
             text-align: center;
         }
         .todo-list {
-            max-height: 200px;
+            max-height: 400px;
             overflow: auto;
+            .list-wrapper{
+                padding: 10px;
+                flex: 1;
+                h2 {
+                    margin: 0 0 10px;
+                }
+
+            }
             ul {
                 margin: 0;
-                padding: 10px;
+                padding: 0px;
                 list-style: none;
                 li > div {
                     margin-bottom: 5px;

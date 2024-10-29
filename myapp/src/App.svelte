@@ -16,8 +16,8 @@
   import { onMount, tick } from "svelte";
   import { fade as sveltefade, fly, slide, blur } from "svelte/transition";
   import { cubicInOut } from "svelte/easing";
-  import { spin } from "./lib/transitions/spin.js";
-  import { fade as myfade } from "./lib/transitions/fade.js";
+  // import { spin } from "./lib/transitions/spin.js";
+  // import { fade as myfade } from "./lib/transitions/fade.js";
 
   let todoList = [];
   let showList = true;
@@ -31,9 +31,13 @@
   let disabledToggleItems = [];
   // $: console.log(todos);  // Reactive variables
 
+
+
   onMount(() => {
     loadTodos();
   });
+
+
 
   async function loadTodos() {
     isLoading = true;
@@ -175,8 +179,9 @@
 </label>
 {#if showList}
   <div 
-    transition:myfade={{ duration: 1000 }} 
-    style:max-width="400px">
+    transition:myfade={{ duration: 500 }} 
+    style:max-width="800px">
+    <!-- transition:myfade={{ duration: 500 }}  -->
     <!-- in:slide={{ duration: 700, easing: cubicInOut }}
     out:blur={{ amount: 10, duration: 700 }} -->
     <!-- on:introstart={() => {
