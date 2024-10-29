@@ -182,15 +182,15 @@
     
     style:max-width="800px">
     <!-- transition:myfade={{ duration: 500 }}  -->
-    <!-- transition:myfade={{ duration: 500 }}  -->
-    <!-- in:slide={{ duration: 700, easing: cubicInOut }}
+<!-- transition:myfade={{ duration: 500 }}  -->
+<!-- in:slide={{ duration: 700, easing: cubicInOut }}
     out:blur={{ amount: 10, duration: 700 }} -->
-    <!-- on:introstart={() => {
+<!-- on:introstart={() => {
       console.log("introstart");
     }} -->
-    <!-- style="opacity:0.5; transform: rotate(90deg)" -->
-    <!-- transition:fly={{ y:400, duration: 10000 }}  -->
-    <!-- <TodoList
+<!-- style="opacity:0.5; transform: rotate(90deg)" -->
+<!-- transition:fly={{ y:400, duration: 10000 }}  -->
+<!-- <TodoList
       {todos}
       {error}
       {isLoading}
@@ -203,10 +203,10 @@
       on:toggletodo={handleToggleTodo}
       let:todo
     > -->
-      <!-- <div> 
+<!-- <div> 
       {todo.title}
     </div> -->
-    <!-- </TodoList>
+<!-- </TodoList>
   </div>
   {#if todos}
     <p>
@@ -225,14 +225,33 @@
 <!-- <style>
 </style>   -->
 
-
 <script>
-  import longpress from "./lib/actions/longpress.js";
+  import tippy from "./lib/actions/tippy.js";
+  //   import { onMount } from "svelte";
+  // // import longpress from "./lib/actions/longpress.js";
 
-  let showButton = true;
-  let duration = 1000;
+  // // let showButton = true;
+  // // let duration = 1000;
+
+  // import tippy from "tippy.js";
+  // import "tippy.js/dist/tippy.css"; // optional for styling
+
+  // let button;
+
+  // onMount(() => {
+  //   tippy('.tooltip', {  // Selector
+  //     content: "This is a tooltip",  // Content
+  //   });
+  //   tippy(button, {
+  //     content: "Text"
+  //   });
+  // })
+
+  let content = "Hello";
+
 </script>
 
+<!-- 
 <label>
   <input type="checkbox" bind:checked={showButton} />
   Toggle
@@ -256,9 +275,24 @@
   >
     Hello
   </button>
-{/if}
+{/if} -->
+
+<!-- <button class="tooltip">Button</button>
+<button class="tooltip" data-tippy-content="Other Text">Button</button>
+
+<button bind:this={button}>Button</button> -->
+
+
+<input bind:value={content} />
+
+<button use:tippy={{ 
+  content, 
+  placement: "right", 
+  theme: "light" }}>
+  Button
+  
+</button>
 
 
 <style>
-
 </style>
