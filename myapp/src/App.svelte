@@ -14,9 +14,10 @@
   import TodoList from "./lib/TodoList.svelte";
   import { v4 as uuid } from "uuid";
   import { onMount, tick } from "svelte";
-  import { fade, fly, slide, blur } from "svelte/transition";
+  import { fade as sveltefade, fly, slide, blur } from "svelte/transition";
   import { cubicInOut } from "svelte/easing";
-  import spin from "./lib/transitions/spin.js";
+  import { spin } from "./lib/transitions/spin.js";
+  import { fade as myfade } from "./lib/transitions/fade.js";
 
   let todoList = [];
   let showList = true;
@@ -173,9 +174,9 @@
   Show List
 </label>
 {#if showList}
-  <div transition:spin={{ spin: 1, duration: 4000 }} 
-  style:max-width="400px"
-  >
+  <div 
+    transition:myfade={{ duration: 1000 }} 
+    style:max-width="400px">
     <!-- in:slide={{ duration: 700, easing: cubicInOut }}
     out:blur={{ amount: 10, duration: 700 }} -->
     <!-- on:introstart={() => {
